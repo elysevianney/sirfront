@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+aside {
+  min-width: 5rem;
+}
+
+main {
+  min-height: 100vh;
+}
+
+@media (max-width: 900px) {
+  :host {
+    flex-direction: column;
+  }
+
+  aside {
+    width: 100% !important;
+  }
+
+  main {
+    padding: 1.5rem;
+  }
+}

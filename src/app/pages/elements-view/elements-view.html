@@ -1,0 +1,84 @@
+<div class="space-y-6">
+  <header class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <p class="text-sm uppercase tracking-[0.28em] text-slate-500">Eléments</p>
+      <h1 class="mt-2 text-3xl font-semibold text-slate-950">Liste des éléments</h1>
+      <p class="mt-2 text-slate-600 max-w-2xl">Affichage des livres et magazines récupérés depuis l'API.</p>
+    </div>
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+      <label class="flex-1 min-w-0">
+        <input
+          type="search"
+          [value]="search()"
+          (input)="search.set($any($event.target).value)"
+          placeholder="Rechercher titre ou auteur..."
+          class="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+        />
+      </label>
+      <a
+        routerLink="/elements/new/book"
+        class="inline-flex items-center justify-center rounded-full bg-sky-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700"
+      >
+        Ajouter un livre
+      </a>
+      <a
+        routerLink="/elements/new/magazine"
+        class="inline-flex items-center justify-center rounded-full bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-slate-200"
+      >
+        Ajouter un magazine
+      </a>
+    </div>
+  </header>
+
+  <section *ngIf="loading()" class="rounded-3xl border border-dashed border-slate-300 bg-white/80 p-12 text-center text-slate-500">
+    Chargement des éléments...
+  </section>
+
+  <section *ngIf="error() && !loading()" class="rounded-3xl border border-red-200 bg-red-50 p-6 text-red-700">
+    {{ error() }}
+  </section>
+
+  <section *ngIf="!loading() && !error() && filteredItems().length === 0" class="rounded-3xl border border-dashed border-slate-300 bg-white/80 p-12 text-center text-slate-500">
+    Aucun élément trouvé.
+  </section>
+
+  <section *ngIf="!loading() && !error() && filteredItems().length > 0" class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+    <article *ngFor="let item of filteredItems()" class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+      <div class="h-44 bg-slate-100 p-4">
+        <div class="h-full w-full rounded-3xl border border-dashed border-slate-300 bg-white/80 flex items-center justify-center text-slate-400">
+          Image à venir
+        </div>
+      </div>
+      <div class="p-5 space-y-4">
+        <div class="flex items-center justify-between gap-3">
+          <span class="inline-flex items-center rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-sky-700">
+            {{ getTypeLabel(item) }}
+          </span>
+          <span class="text-sm text-slate-500">ID {{ item.id }}</span>
+        </div>
+        <div>
+          <h2 class="text-lg font-semibold text-slate-950">{{ item.title }}</h2>
+          <p class="mt-1 text-sm text-slate-600">{{ item.author ?? 'Auteur non renseigné' }}</p>
+        </div>
+        <div class="grid gap-2 text-sm text-slate-600">
+          <div><span class="font-medium text-slate-800">Média :</span> {{ item.media }}</div>
+          <div *ngIf="item.datePublication">Parution : {{ item.datePublication[0] }}/{{ item.datePublication[1] }}/{{ item.datePublication[2] }}</div>
+        </div>
+        <div *ngIf="isAdmin()" class="flex justify-end gap-2 pt-2">
+          <button
+            class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200"
+            title="Modifier"
+          >
+            ✏️
+          </button>
+          <button
+            class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-red-600 transition hover:bg-red-200"
+            title="Supprimer"
+          >
+            🗑️
+          </button>
+        </div>
+      </div>
+    </article>
+  </section>
+</div>

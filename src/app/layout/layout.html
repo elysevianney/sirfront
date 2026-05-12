@@ -1,0 +1,38 @@
+<div class="min-h-screen flex bg-slate-50 text-slate-900">
+  <aside [ngClass]="{ 'w-72': sidebarOpen(), 'w-20': !sidebarOpen() }" class="transition-all duration-300 ease-in-out overflow-hidden bg-slate-950 text-white flex flex-col">
+    <div class="flex items-center justify-between gap-3 px-4 py-4 border-b border-white/10">
+      <div class="space-y-1" *ngIf="sidebarOpen()">
+        <div class="text-2xl font-semibold tracking-tight text-sky-200">SIR</div>
+        <p class="text-xs text-slate-400">Gestion des éléments</p>
+      </div>
+      <button
+        (click)="toggleSidebar()"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 text-slate-200 hover:border-sky-400 hover:bg-slate-800 transition"
+        aria-label="Basculer le menu"
+      >
+        <span *ngIf="sidebarOpen(); else closed">«</span>
+        <ng-template #closed>»</ng-template>
+      </button>
+    </div>
+
+    <nav class="flex-1 px-2 py-6 space-y-2">
+      <a
+        *ngFor="let item of menuItems"
+        [routerLink]="item.path"
+        routerLinkActive="bg-sky-600 text-white"
+        class="group flex items-center gap-3 rounded-3xl px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white transition"
+      >
+        <span class="text-lg">{{ item.icon }}</span>
+        <span *ngIf="sidebarOpen()" class="font-medium">{{ item.label }}</span>
+      </a>
+    </nav>
+
+    <div class="px-4 py-4 border-t border-white/10 text-xs text-slate-500" *ngIf="sidebarOpen()">
+      <p>Version 1.0</p>
+    </div>
+  </aside>
+
+  <main class="flex-1 min-w-0 p-6">
+    <router-outlet />
+  </main>
+</div>

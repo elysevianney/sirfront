@@ -7,21 +7,27 @@ import {finalize} from 'rxjs';
 
 @Component({
   standalone: true,
-  selector: 'app-login',
+  selector: 'app-register',
   imports: [FormsModule, FormField],
-  templateUrl: './login.html',
-  styleUrl: './login.css',
+  templateUrl: './register.html',
+  styleUrl: './register.css',
 })
-export class Login {
+export class Register {
   private readonly authService = inject(AuthService)
   private readonly router = inject(Router)
 
   readonly formModel = signal({
+    nom: '',
+    prenom: '',
+    adresse: '',
     email: '',
     password: '',
   })
 
   readonly form = form(this.formModel, (path) => {
+    required(path.nom)
+    required(path.prenom)
+    required(path.adresse)
     required(path.email)
     email(path.email)
     required(path.password)
@@ -39,20 +45,20 @@ export class Login {
       return
     }
 
-    const { email, password } = this.form().value()
+    const { nom, prenom, adresse, email, password } = this.form().value()
     this.loading.set(true)
     this.errorMessage.set(null)
-    this.authService.login(email, password)
+    this.authService.register(nom, prenom, adresse, email, password)
       .pipe(
         finalize(() => this.loading.set(false))
       )
       .subscribe({
         next: () => {
-          this.router.navigate(['/dashboard']).then()
+          this.router.navigate(['/login']).then()
         },
         error: (err) => {
-          this.errorMessage.set(`La connexion a échouée`)
-          console.error('Erreur lors de la connexion', err)
+          this.errorMessage.set(`L'inscription a échouée`)
+          console.error('Erreur lors de l\'inscription', err)
         }
       })
   }
