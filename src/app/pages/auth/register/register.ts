@@ -1,6 +1,6 @@
 import {Component, computed, inject, signal} from '@angular/core'
 import {FormsModule} from '@angular/forms'
-import {Router} from '@angular/router'
+import {Router, RouterLink} from '@angular/router'
 import {AuthService} from '../../../services/authservice'
 import {email, form, FormField, minLength, required} from '@angular/forms/signals';
 import {finalize} from 'rxjs';
@@ -8,7 +8,7 @@ import {finalize} from 'rxjs';
 @Component({
   standalone: true,
   selector: 'app-register',
-  imports: [FormsModule, FormField],
+  imports: [FormsModule, FormField, RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })

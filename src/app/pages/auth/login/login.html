@@ -29,6 +29,12 @@
                placeholder="••••••••" />
   </div>
 
+  <p class="text-center text-sm text-gray-600">
+    Pas encore de compte ?
+    <a routerLink="/register" class="font-semibold text-blue-600 hover:text-blue-700">
+      S'inscrire
+    </a>
+  </p>
   
   <button type="submit" [disabled]="!form().valid() || loading()"
               class="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed">

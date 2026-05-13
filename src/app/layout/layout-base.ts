@@ -1,12 +1,13 @@
+import { IconName } from '../shared/icon/icon';
+
 export interface LayoutMenuItem {
   label: string;
   path: string;
-  icon?: string;
+  icon: IconName;
 }
 
 export class LayoutBase {
   readonly baseMenuItems: LayoutMenuItem[] = [
-    { label: 'Eléments', path: '/elements', icon: '📦' },
-    { label: 'Dashboard', path: '/dashboard', icon: '🏠' },
+    { label: 'Eléments', path: '/elements', icon: 'box' },
   ];
 }

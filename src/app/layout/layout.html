@@ -1,5 +1,5 @@
 <div class="min-h-screen flex bg-slate-50 text-slate-900">
-  <aside [ngClass]="{ 'w-72': sidebarOpen(), 'w-20': !sidebarOpen() }" class="transition-all duration-300 ease-in-out overflow-hidden bg-slate-950 text-white flex flex-col">
+  <aside [ngClass]="{ 'w-72': sidebarOpen(), 'w-20': !sidebarOpen() }" class="relative z-30 transition-all duration-300 ease-in-out bg-slate-950 text-white flex flex-col">
     <div class="flex items-center justify-between gap-3 px-4 py-4 border-b border-white/10">
       <div class="space-y-1" *ngIf="sidebarOpen()">
         <div class="text-2xl font-semibold tracking-tight text-sky-200">SIR</div>
@@ -10,8 +10,8 @@
         class="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 text-slate-200 hover:border-sky-400 hover:bg-slate-800 transition"
         aria-label="Basculer le menu"
       >
-        <span *ngIf="sidebarOpen(); else closed">«</span>
-        <ng-template #closed>»</ng-template>
+        <app-icon *ngIf="sidebarOpen(); else closed" name="chevron-left" />
+        <ng-template #closed><app-icon name="chevron-right" /></ng-template>
       </button>
     </div>
 
@@ -22,13 +22,40 @@
         routerLinkActive="bg-sky-600 text-white"
         class="group flex items-center gap-3 rounded-3xl px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white transition"
       >
-        <span class="text-lg">{{ item.icon }}</span>
+        <app-icon [name]="item.icon" />
         <span *ngIf="sidebarOpen()" class="font-medium">{{ item.label }}</span>
       </a>
     </nav>
 
-    <div class="px-4 py-4 border-t border-white/10 text-xs text-slate-500" *ngIf="sidebarOpen()">
-      <p>Version 1.0</p>
+    <div class="relative z-40 border-t border-white/10 p-3" *ngIf="currentUser()">
+      <button
+        type="button"
+        (click)="toggleUserMenu()"
+        class="flex w-full items-center gap-3 rounded-3xl px-3 py-3 text-left text-slate-300 transition hover:bg-slate-800 hover:text-white"
+        aria-label="Ouvrir le menu utilisateur"
+      >
+        <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-sky-200">
+          <app-icon name="user" />
+        </span>
+        <span *ngIf="sidebarOpen()" class="min-w-0">
+          <span class="block truncate text-sm font-semibold">{{ userLabel() }}</span>
+          <span class="block truncate text-xs text-slate-500">{{ currentUser()?.email }}</span>
+        </span>
+      </button>
+
+      <div
+        *ngIf="userMenuOpen()"
+        class="absolute bottom-4 left-full z-50 ml-3 w-56 rounded-2xl border border-slate-200 bg-white p-2 text-slate-900 shadow-xl"
+      >
+        <button
+          type="button"
+          (click)="logout()"
+          class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+        >
+          <app-icon name="log-out" />
+          <span>Se déconnecter</span>
+        </button>
+      </div>
     </div>
   </aside>
 

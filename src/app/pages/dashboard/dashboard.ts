@@ -1,10 +1,12 @@
 import {Component, inject} from '@angular/core'
 import {AuthService} from '../../services/authservice'
 import {Router} from '@angular/router'
+import {Icon} from '../../shared/icon/icon'
 
 @Component({
   standalone: true,
   selector: 'app-dashboard',
+  imports: [Icon],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })

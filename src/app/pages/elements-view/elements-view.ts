@@ -5,13 +5,14 @@ import { RouterLink } from '@angular/router';
 import { LayoutBase } from '../../layout/layout-base';
 import { ElementService, ElementItem } from '../../services/element.service';
 import { AuthService } from '../../services/authservice';
+import { Icon } from '../../shared/icon/icon';
 
 type BorrowStatus = 'idle' | 'loading' | 'done' | 'error';
 
 @Component({
   standalone: true,
   selector: 'app-elements-view',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, Icon, RouterLink],
   templateUrl: './elements-view.html',
   styleUrls: ['./elements-view.css'],
 })

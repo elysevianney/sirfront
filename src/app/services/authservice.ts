@@ -16,6 +16,8 @@ interface JWTPayload {
 
 interface UserSummary {
   id: number | string
+  nom?: string
+  prenom?: string
   email: string
 }
 
@@ -55,7 +57,6 @@ export class AuthService {
         roles: payload.roles ?? [],
         token,
       }
-      console.log('AuthService.restoreSession user', user)
       this._currentUser.set(user)
     }
   }
@@ -111,13 +112,14 @@ export class AuthService {
       map((users) => {
         const user = users.find((candidate) => candidate.email === currentUser.email)
         const id = Number(user?.id)
-        return Number.isFinite(id) ? id : undefined
+        return user && Number.isFinite(id) ? { id, nom: user.nom, prenom: user.prenom } : undefined
       }),
-      tap((id) => {
-        if (id) {
-          this._currentUser.update((user) => user ? { ...user, id } : user)
+      tap((resolvedUser) => {
+        if (resolvedUser) {
+          this._currentUser.update((user) => user ? { ...user, ...resolvedUser } : user)
         }
       }),
+      map((resolvedUser) => resolvedUser?.id),
     )
   }
 
