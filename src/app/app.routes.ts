@@ -8,6 +8,7 @@ import { BookCreate } from './pages/elements-view/book-create/book-create';
 import { MagazineCreate } from './pages/elements-view/magazine-create/magazine-create';
 import { MyBorrows } from './pages/my-borrows/my-borrows';
 import { AdminBorrows } from './pages/admin-borrows/admin-borrows';
+import { authGuard } from './services/auth.guard';
 
 export const routes: Routes = [
   {
@@ -30,6 +31,7 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         component: Dashboard,
+        canActivate: [authGuard],
       },
       {
         path: 'elements',
