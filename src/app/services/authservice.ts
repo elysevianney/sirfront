@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal, PLATFORM_ID } from '@angular/core'
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 import { AuthResponse, AuthUser } from '../model/auth';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environments';
@@ -9,7 +9,14 @@ import { isPlatformBrowser } from '@angular/common';
 interface JWTPayload {
   email?: string
   sub?: string
+  id?: number | string
+  userId?: number | string
   roles?: string[]
+}
+
+interface UserSummary {
+  id: number | string
+  email: string
 }
 
 @Injectable({
@@ -43,6 +50,7 @@ export class AuthService {
     const payload = this.decodeJwt(token) as JWTPayload | null
     if (payload) {
       const user: AuthUser = {
+        id: this.getUserIdFromPayload(payload),
         email: payload.email ?? payload.sub ?? '',
         roles: payload.roles ?? [],
         token,
@@ -61,11 +69,18 @@ export class AuthService {
     }
   }
 
+  private getUserIdFromPayload(payload: JWTPayload): number | undefined {
+    const id = payload.userId ?? payload.id ?? payload.sub
+    const numericId = Number(id)
+    return Number.isFinite(numericId) ? numericId : undefined
+  }
+
   login(email: string, password: string): Observable<void> {
     return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, {email, password}).pipe(
       map((response) => {
         const payload = this.decodeJwt(response.token) as JWTPayload | null
         const user: AuthUser = {
+          id: payload ? this.getUserIdFromPayload(payload) : undefined,
           email,
           roles: payload?.roles ?? [],
           token: response.token,
@@ -81,6 +96,29 @@ export class AuthService {
 
   register(nom: string, prenom: string, adresse: string, email: string, password: string): Observable<void> {
     return this.http.post<void>(`${environment.apiUrl}/users`, {nom, prenom, adresse, email, password})
+  }
+
+  resolveCurrentUserId(): Observable<number | undefined> {
+    const currentUser = this._currentUser()
+    if (currentUser?.id) {
+      return of(currentUser.id)
+    }
+    if (!currentUser?.email) {
+      return of(undefined)
+    }
+
+    return this.http.get<UserSummary[]>(`${environment.apiUrl}/users`).pipe(
+      map((users) => {
+        const user = users.find((candidate) => candidate.email === currentUser.email)
+        const id = Number(user?.id)
+        return Number.isFinite(id) ? id : undefined
+      }),
+      tap((id) => {
+        if (id) {
+          this._currentUser.update((user) => user ? { ...user, id } : user)
+        }
+      }),
+    )
   }
 
   logout(): void {

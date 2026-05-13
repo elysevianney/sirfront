@@ -66,18 +66,104 @@
         </div>
         <div *ngIf="isAdmin()" class="flex justify-end gap-2 pt-2">
           <button
+            type="button"
+            (click)="startEdit(item)"
             class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200"
             title="Modifier"
           >
             ✏️
           </button>
           <button
+            type="button"
+            (click)="deleteItem(item)"
+            [disabled]="deleteSavingId() === item.id"
             class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-red-600 transition hover:bg-red-200"
             title="Supprimer"
           >
-            🗑️
+            {{ deleteSavingId() === item.id ? '...' : '🗑️' }}
           </button>
         </div>
+        <form
+          *ngIf="isAdmin() && editingItemId() === item.id"
+          class="space-y-4 rounded-3xl border border-sky-100 bg-sky-50/60 p-4"
+          (ngSubmit)="saveEdit(item)"
+        >
+          <div class="grid gap-4">
+            <label class="space-y-2">
+              <span class="text-sm font-medium text-slate-700">Titre</span>
+              <input
+                type="text"
+                [ngModel]="editTitle()"
+                (ngModelChange)="editTitle.set($event)"
+                name="title"
+                class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                required
+              />
+            </label>
+
+            <label *ngIf="item.media === 'BOOK'" class="space-y-2">
+              <span class="text-sm font-medium text-slate-700">Auteur</span>
+              <input
+                type="text"
+                [ngModel]="editAuthor()"
+                (ngModelChange)="editAuthor.set($event)"
+                name="author"
+                class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                required
+              />
+            </label>
+
+            <label *ngIf="item.media === 'MAG'" class="space-y-2">
+              <span class="text-sm font-medium text-slate-700">Date de publication</span>
+              <input
+                type="date"
+                [ngModel]="editDatePublication()"
+                (ngModelChange)="editDatePublication.set($event)"
+                name="datePublication"
+                class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                required
+              />
+            </label>
+          </div>
+
+          <p *ngIf="editError()" class="text-sm font-medium text-red-600">{{ editError() }}</p>
+
+          <div class="flex flex-col gap-2 sm:flex-row sm:justify-end">
+            <button
+              type="button"
+              (click)="cancelEdit()"
+              class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            >
+              Annuler
+            </button>
+            <button
+              type="submit"
+              [disabled]="editSaving()"
+              class="inline-flex items-center justify-center rounded-full bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {{ editSaving() ? 'Enregistrement...' : 'Enregistrer' }}
+            </button>
+          </div>
+        </form>
+        <div *ngIf="isUser()" class="flex justify-end pt-2">
+          <button
+            type="button"
+            (click)="requestBorrow(item)"
+            [disabled]="getBorrowStatus(item.id) === 'loading' || getBorrowStatus(item.id) === 'done'"
+            class="inline-flex min-w-28 items-center justify-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-default disabled:opacity-80"
+          >
+            <span>{{ getBorrowStatus(item.id) === 'done' ? 'Ajouté' : 'Prêter' }}</span>
+            <span
+              *ngIf="getBorrowStatus(item.id) === 'loading'"
+              class="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+              aria-hidden="true"
+            ></span>
+            <span *ngIf="getBorrowStatus(item.id) === 'done'" aria-hidden="true">✓</span>
+          </button>
+        </div>
+        <p *ngIf="getBorrowStatus(item.id) === 'error'" class="text-right text-xs font-medium text-red-600">
+          {{ borrowErrors()[item.id] ?? "Impossible d'ajouter cette demande." }}
+        </p>
       </div>
     </article>
   </section>

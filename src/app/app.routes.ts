@@ -6,6 +6,8 @@ import { Layout } from './layout/layout';
 import { ElementsView } from './pages/elements-view/elements-view';
 import { BookCreate } from './pages/elements-view/book-create/book-create';
 import { MagazineCreate } from './pages/elements-view/magazine-create/magazine-create';
+import { MyBorrows } from './pages/my-borrows/my-borrows';
+import { AdminBorrows } from './pages/admin-borrows/admin-borrows';
 
 export const routes: Routes = [
   {
@@ -40,6 +42,14 @@ export const routes: Routes = [
       {
         path: 'elements/new/magazine',
         component: MagazineCreate,
+      },
+      {
+        path: 'my-borrows',
+        component: MyBorrows,
+      },
+      {
+        path: 'borrows',
+        component: AdminBorrows,
       },
     ],
   },
