@@ -73,27 +73,18 @@ http://localhost:8080
 
 ### Installer les dependances
 
-```bash
-npm install
-```
-
 ### Lancer le serveur de developpement
 
+
 ```bash
-npm start
+ng serve --proxy-config src/proxy.conf.json
 ```
 
 Puis ouvrir:
 
 ```text
 http://localhost:4200
-```
-
-La commande `npm start` lance Angular avec le proxy:
-
-```bash
-ng serve --proxy-config src/proxy.conf.json
-```
+``````
 
 ## Comptes de test
 
@@ -103,6 +94,11 @@ Le backend initialise notamment un compte administrateur:
 email: admin@gmail.com
 password: Azerty123?
 ```
+Pour tester l’application, connectez-vous avec les identifiants de l’administrateur.
+Créez un nouvel utilisateur, puis explorez le site avec ce compte.
+Depuis le compte d’un utilisateur simple, cliquez sur le bouton « Prêter » sur un élement dans la liste. Vous pourrez ensuite consulter la demande dans le menu « Mes demandes » avec le compte admin.
+Reconnectez-vous avec le compte administrateur, puis rendez-vous dans le menu « Demandes ». Cliquez sur la demande de l’utilisateur et modifiez son statut de « Borrowing » à « Borrowed ».
+Enfin, reconnectez-vous au compte utilisateur afin de vérifier que le statut a bien été mis à jour.
 
 Les utilisateurs peuvent etre crees depuis la page `/register`.
 
