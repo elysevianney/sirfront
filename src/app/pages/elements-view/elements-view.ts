@@ -75,8 +75,16 @@ export class ElementsView extends LayoutBase implements OnInit {
     });
   }
 
+  protected isBook(item: ElementItem): boolean {
+    return Boolean(item.author);
+  }
+
+  protected isMagazine(item: ElementItem): boolean {
+    return Boolean(item.datePublication);
+  }
+
   getTypeLabel(item: ElementItem) {
-    return item.media === 'BOOK' ? 'Livre' : 'Magazine';
+    return this.isBook(item) ? 'Livre' : 'Magazine';
   }
 
   protected startEdit(item: ElementItem): void {
@@ -96,7 +104,8 @@ export class ElementsView extends LayoutBase implements OnInit {
     this.editSaving.set(true);
     this.editError.set(null);
 
-    const request = item.media === 'BOOK'
+    const isBook = this.isBook(item);
+    const request = isBook
       ? this.elementService.updateBook(item.id, {
           title: this.editTitle(),
           author: this.editAuthor(),
@@ -118,8 +127,8 @@ export class ElementsView extends LayoutBase implements OnInit {
           return {
             ...currentItem,
             title: this.editTitle(),
-            author: item.media === 'BOOK' ? this.editAuthor() : currentItem.author,
-            datePublication: item.media === 'MAG' ? this.toDateArray(this.editDatePublication()) : currentItem.datePublication,
+            author: isBook ? this.editAuthor() : currentItem.author,
+            datePublication: !isBook ? this.toDateArray(this.editDatePublication()) : currentItem.datePublication,
           };
         }));
         this.editSaving.set(false);

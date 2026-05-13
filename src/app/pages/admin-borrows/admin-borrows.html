@@ -21,7 +21,7 @@
     Aucune demande pour le moment.
   </section>
 
-  <section *ngIf="!loading() && !error() && borrows().length > 0" class="grid gap-6 xl:grid-cols-[1fr_380px]">
+  <section *ngIf="!loading() && !error() && borrows().length > 0" class="grid gap-4">
     <div class="grid gap-4">
       <button
         *ngFor="let borrow of borrows()"
@@ -50,50 +50,71 @@
         </div>
       </button>
     </div>
+  </section>
 
-    <aside class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-      <ng-container *ngIf="selectedBorrow(); else emptySelection">
-        <div class="space-y-5">
+  <div *ngIf="selectedBorrow()" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4">
+    <button
+      type="button"
+      class="absolute inset-0 cursor-default"
+      aria-label="Fermer le formulaire"
+      (click)="closeModal()"
+    ></button>
+
+    <section class="relative z-10 w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 text-slate-900 shadow-2xl">
+      <div class="space-y-5">
+        <div class="flex items-start justify-between gap-4">
           <div>
             <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Modification</p>
             <h2 class="mt-2 text-xl font-semibold text-slate-950">{{ getBorrowTitle(selectedBorrow()!) }}</h2>
             <p class="mt-1 text-sm text-slate-600">{{ getUserLabel(selectedBorrow()!) }}</p>
           </div>
+          <button
+            type="button"
+            (click)="closeModal()"
+            class="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-slate-100 text-slate-600 transition hover:bg-slate-200"
+            aria-label="Fermer"
+          >
+            x
+          </button>
+        </div>
 
-          <form class="space-y-4" (ngSubmit)="updateSelectedBorrow()">
-            <label class="block space-y-2">
-              <span class="text-sm font-medium text-slate-700">Statut</span>
-              <select
-                [ngModel]="selectedStatus()"
-                (ngModelChange)="selectedStatus.set($event)"
-                name="status"
-                class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
-              >
-                <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
-              </select>
-            </label>
+        <form class="space-y-4" (ngSubmit)="updateSelectedBorrow()">
+          <label class="block space-y-2">
+            <span class="text-sm font-medium text-slate-700">Statut</span>
+            <select
+              [ngModel]="selectedStatus()"
+              (ngModelChange)="selectedStatus.set($event)"
+              name="status"
+              class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+            >
+              <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+            </select>
+          </label>
 
-            <div class="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
-              <div><span class="font-medium text-slate-800">Date début envoyée :</span> {{ getTodayDate() }}</div>
-              <div><span class="font-medium text-slate-800">Date rendue envoyée :</span> {{ getDateInOneMonth() }}</div>
-            </div>
+          <div class="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
+            <div><span class="font-medium text-slate-800">Date début envoyée :</span> {{ getTodayDate() }}</div>
+            <div><span class="font-medium text-slate-800">Date rendue envoyée :</span> {{ getDateInOneMonth() }}</div>
+          </div>
 
+          <div class="flex flex-col gap-2 sm:flex-row sm:justify-end">
+            <button
+              type="button"
+              (click)="closeModal()"
+              [disabled]="saving()"
+              class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              Annuler
+            </button>
             <button
               type="submit"
               [disabled]="saving()"
-              class="inline-flex w-full items-center justify-center rounded-full bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+              class="inline-flex items-center justify-center rounded-full bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {{ saving() ? 'Mise à jour...' : 'Mettre à jour' }}
             </button>
-          </form>
-        </div>
-      </ng-container>
-
-      <ng-template #emptySelection>
-        <div class="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
-          Cliquez sur une demande pour la modifier.
-        </div>
-      </ng-template>
-    </aside>
-  </section>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
 </div>

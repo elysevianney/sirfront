@@ -79,7 +79,7 @@ export class AdminBorrows implements OnInit {
           status: this.selectedStatus(),
         };
         this.borrows.update((borrows) => borrows.map((item) => item.id === borrow.id ? updatedBorrow : item));
-        this.selectedBorrow.set(updatedBorrow);
+        this.selectedBorrow.set(null);
         this.success.set('Demande mise à jour.');
         this.saving.set(false);
       },
@@ -93,6 +93,12 @@ export class AdminBorrows implements OnInit {
 
   protected getBorrowTitle(borrow: BorrowItem): string {
     return borrow.item?.title ?? 'Elément inconnu';
+  }
+
+  protected closeModal(): void {
+    if (!this.saving()) {
+      this.selectedBorrow.set(null);
+    }
   }
 
   protected getUserLabel(borrow: BorrowItem): string {

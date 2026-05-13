@@ -1,5 +1,5 @@
 <div class="min-h-screen flex bg-slate-50 text-slate-900">
-  <aside [ngClass]="{ 'w-72': sidebarOpen(), 'w-20': !sidebarOpen() }" class="relative z-30 transition-all duration-300 ease-in-out bg-slate-950 text-white flex flex-col">
+  <aside [ngClass]="{ 'w-72': sidebarOpen(), 'w-20': !sidebarOpen() }" class="fixed inset-y-0 left-0 z-30 transition-all duration-300 ease-in-out bg-slate-950 text-white flex flex-col">
     <div class="flex items-center justify-between gap-3 px-4 py-4 border-b border-white/10">
       <div class="space-y-1" *ngIf="sidebarOpen()">
         <div class="text-2xl font-semibold tracking-tight text-sky-200">SIR</div>
@@ -15,7 +15,7 @@
       </button>
     </div>
 
-    <nav class="flex-1 px-2 py-6 space-y-2">
+    <nav class="min-h-0 flex-1 space-y-2 overflow-y-auto px-2 py-6">
       <a
         *ngFor="let item of menuItems()"
         [routerLink]="item.path"
@@ -27,7 +27,7 @@
       </a>
     </nav>
 
-    <div class="relative z-40 border-t border-white/10 p-3" *ngIf="currentUser()">
+    <div class="relative z-40 mt-auto shrink-0 border-t border-white/10 p-3" *ngIf="currentUser()">
       <button
         type="button"
         (click)="toggleUserMenu()"
@@ -59,7 +59,7 @@
     </div>
   </aside>
 
-  <main class="flex-1 min-w-0 p-6">
+  <main [ngClass]="{ 'ml-72': sidebarOpen(), 'ml-20': !sidebarOpen() }" class="min-w-0 flex-1 p-6 transition-all duration-300 ease-in-out">
     <router-outlet />
   </main>
 </div>

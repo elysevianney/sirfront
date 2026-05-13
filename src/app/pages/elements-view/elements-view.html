@@ -44,8 +44,8 @@
     <article *ngFor="let item of filteredItems()" class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
       <div class="h-44 bg-slate-100 p-4">
         <img
-          [src]="item.media === 'BOOK' ? '/book.jpg' : '/magazine.jpg'"
-          [alt]="item.media === 'BOOK' ? 'Illustration livre' : 'Illustration magazine'"
+          [src]="isBook(item) ? '/book.jpg' : '/magazine.jpg'"
+          [alt]="isBook(item) ? 'Illustration livre' : 'Illustration magazine'"
           class="h-full w-full rounded-3xl object-cover"
         />
       </div>
@@ -57,10 +57,9 @@
         </div>
         <div>
           <h2 class="text-lg font-semibold text-slate-950">{{ item.title }}</h2>
-          <p class="mt-1 text-sm text-slate-600">{{ item.author ?? 'Auteur non renseigné' }}</p>
+          <p *ngIf="isBook(item)" class="mt-1 text-sm text-slate-600">{{ item.author }}</p>
         </div>
         <div class="grid gap-2 text-sm text-slate-600">
-          <div><span class="font-medium text-slate-800">Média :</span> {{ item.media }}</div>
           <div *ngIf="item.datePublication">Parution : {{ item.datePublication[0] }}/{{ item.datePublication[1] }}/{{ item.datePublication[2] }}</div>
         </div>
         <div *ngIf="isAdmin()" class="flex justify-end gap-2 pt-2">
@@ -103,7 +102,7 @@
               />
             </label>
 
-            <label *ngIf="item.media === 'BOOK'" class="space-y-2">
+            <label *ngIf="isBook(item)" class="space-y-2">
               <span class="text-sm font-medium text-slate-700">Auteur</span>
               <input
                 type="text"
@@ -115,7 +114,7 @@
               />
             </label>
 
-            <label *ngIf="item.media === 'MAG'" class="space-y-2">
+            <label *ngIf="isMagazine(item)" class="space-y-2">
               <span class="text-sm font-medium text-slate-700">Date de publication</span>
               <input
                 type="date"

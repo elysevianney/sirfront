@@ -5,7 +5,7 @@ import { environment } from '../../environments/environments';
 
 export interface ElementItem {
   id: number;
-  media: 'BOOK' | 'MAG';
+  media: string;
   title: string;
   borrowings: unknown[];
   wishedBy: unknown[];
